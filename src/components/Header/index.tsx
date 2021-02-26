@@ -9,11 +9,11 @@ import {MdMenu, MdSettings, MdMoreHoriz, MdBackspace} from 'react-icons/md';
 import Avatar from '../Avatar' 
 import Searchbar from '../Searchbar';
 
-const Header: React.FC = ({children, back}) => {
+const Header: React.FC = ({children}) => {
   return (
     <HeaderC>
     <IconButton>
-      {back ? <MdMenu /> : <MdBackspace />}
+      <MdMenu />
     </IconButton>
     <HeaderOptionsWrapper>
       <Searchbar />

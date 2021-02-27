@@ -7,11 +7,16 @@ import Viewer from './app/Viewer';
 
 import Editor from './app/Editor'; 
 
+import Routes from './routes';
+
+import AuthContextProvider from './contexts/auth.context' 
 
 function App() {
   return (
     <div className="App">
-      <Editor />
+        <AuthContextProvider>
+            <Routes />
+        </AuthContextProvider>
     </div>
   );
 }

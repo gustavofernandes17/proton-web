@@ -12,6 +12,27 @@ const GlobalStyles = createGlobalStyle`
         height: 100%
     }
     
+
+    /* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e1e1e1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #aaa;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #898989;
+}
+
 `;
 
 export default GlobalStyles; 

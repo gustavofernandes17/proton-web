@@ -20,7 +20,7 @@ export const Information  = styled.div`
 `;
 
 export const Cover = styled.img`
-    height: 250px;
+    max-height: 250px;
     width: 100%;
     object-fit:cover;
 `;

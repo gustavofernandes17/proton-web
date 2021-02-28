@@ -1,76 +1,67 @@
-import React, {useState, createContext, useEffect, useContext} from 'react'; 
-import {useGoogleLogin, useGoogleLogout, GoogleLoginResponseOffline} from 'react-google-login';
-import api from '../services/api';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import api from "../services/api";
 
-export interface IUser {
-    name: string;
-    email: string; 
-    imageUrl: string; 
-    id: number;
+export interface AuthContextData {
+  isLoggedIn: boolean;
+  userProfile: Object | null;
+  setUserProfile: Function;
+  handleLogin: Function;
+  handleLogout: Function;
 }
 
-export interface IAuthContext {
-    isLogedIn: boolean;
-    setIsLogedIn: Function;
-    login: Function; 
-    logout: Function;
-    userProfile: IUser | null; 
-    loading: boolean;
-    setLoading: Function; 
-}
+export const authContext = createContext<AuthContextData>(
+  {} as AuthContextData
+);
 
+const AuthProvider: React.FC = ({ children }) => {
+  const [userProfile, setUserProfile] = useState(null);
 
-export const authContext = createContext<IAuthContext | null>(null);
+  async function handleLogin(data: any) {
+    try {
+      const response = await api.post("/u", {
+        name: data.profileObj.name,
+        email: data.profileObj.email,
+        image_url: data.profileObj.imageUrl,
+      });
 
-
-
-const AuthContextProvider: React.FC = ({children}) => {
-
-    const [isLogedIn, setIsLogedIn] = useState(false); 
-    const [userProfile, setUserProfile] = useState<IUser | null>(null); 
-
-    const [loading, setLoading] = useState(false); 
-
-  
-    async function login(user: any) {
-
-        try {
-            const response = await api.post('/u', {
-                name: user.profileObj.name,
-                email: user.profileObj.email,
-                image_url: user.profileObj.imageUrl,
-            })
-            console.log(response.data)
-        } catch(err) {
-            console.log(err)
-        }
+      localStorage.setItem("@proton/user", JSON.stringify(response.data));
+      setUserProfile(response.data);
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    async function logout() {
+  function handleLogout() {
+    localStorage.clear();
+    setUserProfile(null);
+  }
+  useEffect(() => {
+    const user = localStorage.getItem("@proton/user");
 
+    if (user !== null) {
+      setUserProfile(JSON.parse(user));
     }
+  }, []);
 
-    useEffect(() => {
-        function checkIfUserIsAlreadyLoggedIn() {
-            const user = localStorage.getItem('@proton/user');
-            if (user) {
-                setIsLogedIn(true); 
-                setUserProfile(JSON.parse(user));
-            }
-        }
-        checkIfUserIsAlreadyLoggedIn()
-    })
+  return (
+    <authContext.Provider
+      value={{
+        isLoggedIn: !!userProfile,
+        userProfile,
+        setUserProfile,
+        handleLogin,
+        handleLogout,
+      }}
+    >
+      {children}
+    </authContext.Provider>
+  );
+};
 
-    return (
-        <authContext.Provider value={{login, logout, isLogedIn, setIsLogedIn, userProfile, loading, setLoading}}>
-            {children}
-        </authContext.Provider>
-    )
-}
+export const useAuth = () => {
+  const context: AuthContextData = useContext(authContext);
 
-export const useAuthContext = () => {
-    const context = useContext(authContext);
-    return context
-}
+  return context;
+};
 
-export default AuthContextProvider;
+export default AuthProvider;

@@ -1,8 +1,7 @@
-import axios from 'axios'; 
+import axios from "axios";
 
+const developmentServer = "http://localhost:3333/alpha";
 
-const developmentServer = 'http://192.168.0.134:3000/alpha'
+const api = axios.create({ baseURL: developmentServer });
 
-const api = axios.create({baseURL: developmentServer});
-
-export default api; 
+export default api;

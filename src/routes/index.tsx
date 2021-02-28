@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from "react-router-dom";
+import { useAuth } from "../contexts/auth.context";
 
-import AppRoutes from './app.routes';
-import AuthRoutes from './auth.routes';
-
+import AppRoutes from "./app.routes";
+import AuthRoutes from "./auth.routes";
 
 const Routes = () => {
-    return (
-        <BrowserRouter>
-            <AuthRoutes />
-        </BrowserRouter>
-    )
-}
+  const { isLoggedIn } = useAuth();
 
-export default Routes
+  return (
+    <BrowserRouter>{isLoggedIn ? <AppRoutes /> : <AuthRoutes />}</BrowserRouter>
+  );
+};
+
+export default Routes;

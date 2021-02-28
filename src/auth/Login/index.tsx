@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-
-import { useGoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import React, { useContext } from "react";
 
 import {
   Container,
@@ -10,60 +8,56 @@ import {
   Caption,
   Subtitle,
   Wrapper,
-  Header
-} from './styles';
+  Header,
+} from "./styles";
 
-import Logo from '../../static/logo.svg';
+import Logo from "../../static/logo.svg";
 
-import { useAuthContext, authContext } from '../../contexts/auth.context';
+import { useAuth } from "../../contexts/auth.context";
+import { useGoogleLogin } from "react-google-login";
 
 const Login: React.FC = () => {
-    const clientId = '758889454514-vk0q314l5i152j0vfke1pii872qt9dde.apps.googleusercontent.com'
+  const { handleLogin } = useAuth();
 
-    const { login } = useContext(authContext);
-   
-    function onFailure(res: any) {
-        console.log(res); 
-    }
+  const { signIn } = useGoogleLogin({
+    clientId:
+      "758889454514-b0t9tq2mp36rm73lbq4kmcold96hnkde.apps.googleusercontent.com",
+    onSuccess,
+    onFailure,
+  });
 
-    async function onSuccess(res: any) {
-     
-    }
+  async function onSuccess(res: any) {
+    await handleLogin(res);
+  }
 
-    const {signIn} = useGoogleLogin({
-        onSuccess,
-        onFailure,
-        clientId: clientId,
-        isSignedIn: true,
-        accessType: 'offline',
-     })
- 
-    return (
-      <>
+  function onFailure(res: any) {
+    console.log(res);
+  }
+
+  return (
+    <>
       <Header>
-        <img src={Logo} alt="logo" height={40} width={40}/>
+        <img src={Logo} alt="logo" height={40} width={40} />
       </Header>
       <Container>
         <Form>
           <Wrapper>
-            <Title>
-              Welcome
-            </Title>
+            <Title>Proton</Title>
             <Subtitle>
-              Remember that this isn't the stable version yet. proton is still 
+              Remember that this isn't the stable version yet. proton is still
               under test phases.
             </Subtitle>
           </Wrapper>
           <Wrapper>
-            <ButtonPrimary onClick={signIn}>
-              Login with Google
-            </ButtonPrimary>
-            <Caption>In making login you agree in participating of the beta program</Caption>
+            <ButtonPrimary onClick={signIn}>Login with Google</ButtonPrimary>
+            <Caption>
+              In making login you agree in participating of the beta program
+            </Caption>
           </Wrapper>
         </Form>
       </Container>
-      </>
-      )
-}
+    </>
+  );
+};
 
 export default Login;

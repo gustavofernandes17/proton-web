@@ -1,23 +1,19 @@
-import styled from 'styled-components';
-
+import styled from "styled-components";
 
 export const Searchbar = styled.input`
-    height:32px;
-    width: 250px; 
-    border-radius: 25px;
-    outline: none;
+  height: 32px;
+  width: 250px;
+  border-radius: 25px;
+  outline: none;
 
-    max-width: 350px; 
-    border: solid 1px #ccc; 
-    padding: 0 15px; 
+  max-width: 350px;
+  border: solid 1px #ccc;
+  padding: 0 15px;
 
-    font-weight: 500; 
+  font-weight: 500;
 
-   
-
-    transition: .1s; 
-    :focus {
-        border-width: 2px; 
-        border-color: #1e1e1e
-    }
+  transition: 0.5s;
+  :focus {
+    border-radius: 5px;
+  }
 `;

@@ -1,54 +1,82 @@
-import React from 'react';
+import React, { useState } from "react";
 
-import Header from '../../components/Header'; 
-import { MdDelete, MdPublic, MdImage } from 'react-icons/md'
-import { IconButton } from '@material-ui/core';
+import Header from "../../components/Header";
+import HeaderTextButton from "../../components/HeaderTextButton";
 
-import {Container,
-    Cover,
-    FileHeaderContainer,
-    EditableTitle,
-    Editor as EditorC,
-    EditableTopic
-} from './styles';
+import {
+  Container,
+  Cover,
+  FileHeaderContainer,
+  EditableTitle,
+  EditableTopic,
+  Properties,
+  PropertyWrapper,
+  PropertyName,
+} from "./styles";
 
+import CustomEditor from "./CustomEditor";
 
-const Editor: React.FC = () => {
-    return (
-        <Container>
-            <Header>
-                <IconButton>
-                    <MdDelete/>
-                </IconButton>
-                <IconButton>
-                    <MdPublic />
-                </IconButton>
-                <IconButton>
-                    <MdImage />
-                </IconButton>
-            </Header>
-            <Cover 
-                src="https://images.unsplash.com/photo-1614186981972-8aff75a55306?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-            />
-            
-            <FileHeaderContainer>
-                <EditableTitle
-                    placeholder="Untitled"
-                >
+import { MdBookmark, MdCheck } from "react-icons/md";
 
-                </EditableTitle>
-                <EditableTopic
-                    placeholder="without topic"
-                >
-                </EditableTopic>
-            </FileHeaderContainer>
-            <EditorC
-                placeholder="start typing..."
-            />
+import UnsplashMenu from "../../components/UnsplashMenu";
+import { useEditorContext } from "../../contexts/editor.context";
 
-            
-        </Container>
-    )
-}
+const EditorPage: React.FC = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-export default Editor; 
+  const {
+    topic,
+    title,
+    setTitle,
+    setTopic,
+    coverUrl,
+    isPublished,
+    setIsPublished,
+  } = useEditorContext();
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <Container>
+      <UnsplashMenu anchorEl={anchorEl} onClose={handleClose} />
+      <Header haveBack title={title} isEditor>
+        <HeaderTextButton onClick={handleClick}>Delete</HeaderTextButton>
+        <HeaderTextButton onClick={handleClick}>Change cover</HeaderTextButton>
+        <HeaderTextButton onClick={() => setIsPublished(!isPublished)}>
+          {isPublished ? <MdCheck /> : null}Published
+        </HeaderTextButton>
+      </Header>
+      <Cover src={coverUrl} />
+
+      <FileHeaderContainer>
+        <EditableTitle
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Untitled"
+        ></EditableTitle>
+        <Properties>
+          <PropertyWrapper>
+            <PropertyName>
+              <MdBookmark size={18} style={{ marginRight: 15 }} />
+              Topic
+            </PropertyName>
+            <EditableTopic
+              placeholder="without topic"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+            ></EditableTopic>
+          </PropertyWrapper>
+        </Properties>
+      </FileHeaderContainer>
+      <CustomEditor />
+    </Container>
+  );
+};
+
+export default EditorPage;
